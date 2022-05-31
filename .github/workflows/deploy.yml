@@ -20,8 +20,8 @@ jobs:
         run: |
           echo "kubectl rollout restart deployment/foo"
       - uses: ./.github/workflows/notify.yml
-        secrets: inherit
         with:
+          GOOGLE_CHAT_WEBHOOK: ${{ inputs.GOOGLE_CHAT_WEBHOOK }}
           message: '{
             "cards": [
               {
