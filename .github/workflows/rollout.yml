@@ -42,7 +42,7 @@ jobs:
                         "keyValue": {
                           "icon": "BOOKMARK",
                           "topLabel": "Tag",
-                          "content": "${{ needs.build.outputs.tag }}"
+                          "content": "-"
                         }
                       },
                       {
