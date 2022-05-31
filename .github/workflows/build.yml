@@ -78,6 +78,7 @@ jobs:
           tags: ${{ (inputs.tag && steps.tag.outputs.lowercase) || steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: ${{ (inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar') || (inputs.output-type == 'package' && 'registry') }}
+          push: ${{ inputs.output-type == 'package' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
       - name: Fix cache
