@@ -63,13 +63,19 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=raw,event=branch,enable=${{ startsWith(github.ref,'refs/heads/feature/') }},value={{branch}}
             type=sha,event=branch,enable=${{ github.ref == 'refs/heads/main' }}
+      - name: Setting Image Tag
+        uses: ASzc/change-string-case-action@v1
+        if: inputs.tag
+        id: tag
+        with:
+          string: ${{ format('ghcr.io/{0}:{1}', github.repository, inputs.tag) }}
       - name: Building Docker Image
         id: build
         uses: docker/build-push-action@v2
         with:
           context: ${{ inputs.context }}
           file: ${{ inputs.dockerfile }}
-          tags: ${{ (inputs.tag && format('ghcr.io/{0}:{1}', ${GITHUB_REPOSITORY,,}, inputs.tag)) || steps.meta.outputs.tags }}
+          tags: ${{ (inputs.tag && steps.tag.outputs.lowercase) || steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: ${{ (inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar') || (inputs.output-type == 'package' && 'registry') }}
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -88,4 +94,4 @@ jobs:
         id: return
         run: |
           echo "::set-output name=id::${{ steps.build.outputs.imageid }}"
-          echo "::set-output name=tag::${{ inputs.tag || steps.meta.outputs.tags }}"
+          echo "::set-output name=tag::${{ (inputs.tag && steps.outputs.tag.lowercase) || steps.meta.outputs.tags }}"
