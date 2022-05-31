@@ -20,9 +20,9 @@ jobs:
         run: |
           echo "kubectl rollout restart deployment/foo"
   notify:
-    uses: Hum-Systems/actions/.github/workflows/notify.yml@main
-    with:
-      GOOGLE_CHAT_WEBHOOK: ${{ inputs.GOOGLE_CHAT_WEBHOOK }}
+    name: Notify
+    runs-on: ubuntu-latest
+    env: 
       message: '{
         "cards": [
           {
@@ -92,3 +92,12 @@ jobs:
           }
         ]
       }'
+    steps:
+      chat:
+        name: Send Google Chat Notification
+        run: |
+          curl
+            --location \
+            --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}' \
+            --header 'Content-Type: application/json' \
+            --data-raw ${{ inputs.message }}
