@@ -19,10 +19,6 @@ jobs:
       - name: Rollout
         run: |
           echo "kubectl rollout restart deployment/foo"
-  notify:
-    name: Notify
-    runs-on: ubuntu-latest
-    steps:
       - name: Send Google Chat Notification
         env: 
           message: '{
