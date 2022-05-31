@@ -69,7 +69,7 @@ jobs:
         with:
           context: ${{ inputs.context }}
           file: ${{ inputs.dockerfile }}
-          tags: ${{ (inputs.tag && format('ghcr.io/{0}:{1}', github.repository, inputs.tag)) || steps.meta.outputs.tags }}
+          tags: ${{ (inputs.tag && format('ghcr.io/{0}:{1}', ${GITHUB_REPOSITORY,,}, inputs.tag)) || steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: ${{ (inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar') || (inputs.output-type == 'package' && 'registry') }}
           cache-from: type=local,src=/tmp/.buildx-cache
