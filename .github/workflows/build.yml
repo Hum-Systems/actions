@@ -77,10 +77,13 @@ jobs:
           file: ${{ inputs.dockerfile }}
           tags: ${{ (inputs.tag && steps.tag.outputs.lowercase) || steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: ${{ (inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar') || (inputs.output-type == 'package' && 'registry') }}
-          push: ${{ inputs.output-type == 'package' }}
+          outputs: ${{ (inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar') || 'image' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+      - name: Push Image
+        if: inputs.output-type == 'package'
+        run: |
+          docker push ${{ steps.tag.outputs.lowercase }}
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
