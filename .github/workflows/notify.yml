@@ -1,0 +1,25 @@
+on:
+  workflow_call:
+    secrets:
+      GOOGLE_CHAT_WEBHOOK:
+        required: true
+    inputs:
+      message:
+        description: 'JSON Body of the Google Chat Message'
+        type: string
+        required: true
+
+name: Notify
+
+jobs:
+  chat:
+    name: Google Chat
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Notification
+        run: |
+          curl
+            --location \
+            --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}' \
+            --header 'Content-Type: application/json' \
+            --data-raw ${{ inputs.message }}
