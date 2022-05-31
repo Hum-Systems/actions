@@ -83,7 +83,7 @@ jobs:
       - name: Push Image
         if: inputs.output-type == 'package'
         run: |
-          docker push ${{ (inputs.tag && steps.tag.outputs.lowercase) || steps.meta.outputs.tags }}
+          docker push ${{ (inputs.tag && steps.tag.outputs.lowercase) || format('ghcr.io/{0}', steps.meta.outputs.tags) }}
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
