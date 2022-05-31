@@ -3,8 +3,6 @@ on:
     secrets:
       GOOGLE_CHAT_WEBHOOK:
         required: true
-      GITHUB_TOKEN:
-        required: true
     inputs:
       environment:
         type: choice
