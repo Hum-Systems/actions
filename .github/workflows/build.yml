@@ -71,8 +71,7 @@ jobs:
           file: ${{ inputs.dockerfile }}
           tags: ${{ (inputs.tag && format('ghcr.io/{0}:{1}', github.repository, inputs.tag)) || steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: ${{ inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar' }}
-          push: ${{ inputs.output-type == 'package' }}
+          outputs: ${{ (inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar') || (inputs.output-type == 'package' && 'registry') }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
       - name: Fix cache
