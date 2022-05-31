@@ -5,22 +5,18 @@ on:
         required: true
     inputs:
       environment:
-        type: choice
+        type: string
         description: 'The target deployment environment'
         required: true
-        options:
-          - staging
-          - production
-
 
 name: Deploy
 
 jobs:
-  rollout:
-    name: Rollout
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Restart
+      - name: Rollout
         run: |
           echo "kubectl rollout restart deployment/foo"
       - uses: ./.github/workflows/notify.yml
