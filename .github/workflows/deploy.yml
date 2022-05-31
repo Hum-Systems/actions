@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Restart
-        runs: |
+        run: |
           echo "kubectl rollout restart deployment/foo"
       - uses: ./.github/workflows/notify.yml
         secrets:
