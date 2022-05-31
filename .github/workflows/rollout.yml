@@ -22,78 +22,78 @@ jobs:
   notify:
     name: Notify
     runs-on: ubuntu-latest
-    env: 
-      message: '{
-        "cards": [
-          {
-            "header": {
-              "title": "📦 Deployment",
-              "subtitle": "${{ github.event.repository.name }} was deployed to ${{ inputs.environment }}"
-            },
-            "sections": [
+    steps:
+      - name: Send Google Chat Notification
+        env: 
+          message: '{
+            "cards": [
               {
-                "widgets": [
+                "header": {
+                  "title": "📦 Deployment",
+                  "subtitle": "${{ github.event.repository.name }} was deployed to ${{ inputs.environment }}"
+                },
+                "sections": [
                   {
-                    "keyValue": {
-                      "icon": "INVITE",
-                      "topLabel": "Status",
-                      "content": "${{ job.status }}"
-                    }
-                  },
-                  {
-                    "keyValue": {
-                      "icon": "BOOKMARK",
-                      "topLabel": "Tag",
-                      "content": "${{ needs.build.outputs.tag }}"
-                    }
-                  },
-                  {
-                    "keyValue": {
-                      "icon": "DESCRIPTION",
-                      "topLabel": "Commit",
-                      "content": "${{ github.event.head_commit.message }}",
-                      "bottomLabel": "${{ github.event.head_commit.id }}",
-                      "onClick": {
-                        "openLink": {
-                          "url": "${{ github.event.head_commit.url }}"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "keyValue": {
-                      "iconUrl": "${{ github.event.sender.avatar_url }}",
-                      "topLabel": "Author",
-                      "content": "${{ github.event.sender.login }}",
-                      "onClick": {
-                        "openLink": {
-                          "url": "${{ github.event.sender.html_url }}"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "buttons": [
+                    "widgets": [
                       {
-                        "textButton": {
-                          "text": "VIEW",
+                        "keyValue": {
+                          "icon": "INVITE",
+                          "topLabel": "Status",
+                          "content": "${{ job.status }}"
+                        }
+                      },
+                      {
+                        "keyValue": {
+                          "icon": "BOOKMARK",
+                          "topLabel": "Tag",
+                          "content": "${{ needs.build.outputs.tag }}"
+                        }
+                      },
+                      {
+                        "keyValue": {
+                          "icon": "DESCRIPTION",
+                          "topLabel": "Commit",
+                          "content": "${{ github.event.head_commit.message }}",
+                          "bottomLabel": "${{ github.event.head_commit.id }}",
                           "onClick": {
                             "openLink": {
-                              "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}}"
+                              "url": "${{ github.event.head_commit.url }}"
                             }
                           }
                         }
+                      },
+                      {
+                        "keyValue": {
+                          "iconUrl": "${{ github.event.sender.avatar_url }}",
+                          "topLabel": "Author",
+                          "content": "${{ github.event.sender.login }}",
+                          "onClick": {
+                            "openLink": {
+                              "url": "${{ github.event.sender.html_url }}"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "buttons": [
+                          {
+                            "textButton": {
+                              "text": "VIEW",
+                              "onClick": {
+                                "openLink": {
+                                  "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}}"
+                                }
+                              }
+                            }
+                          }
+                        ]
                       }
                     ]
                   }
                 ]
               }
             ]
-          }
-        ]
-      }'
-    steps:
-      - name: Send Google Chat Notification
+          }'
         run: |
           curl
             --location \
