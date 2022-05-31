@@ -83,7 +83,7 @@ jobs:
       - name: Push Image
         if: inputs.output-type == 'package'
         run: |
-          docker push ${{ steps.tag.outputs.lowercase }}
+          docker push ${{ (inputs.tag && steps.tag.outputs.lowercase) || steps.meta.outputs.tags }}
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
