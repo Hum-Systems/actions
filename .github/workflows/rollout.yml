@@ -93,8 +93,7 @@ jobs:
         ]
       }'
     steps:
-      chat:
-        name: Send Google Chat Notification
+      - name: Send Google Chat Notification
         run: |
           curl
             --location \
