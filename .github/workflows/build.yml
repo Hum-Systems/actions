@@ -13,13 +13,9 @@ on:
         type: string
         description: 'Override the docker image tag'
       output-type:
-        type: choice
+        type: string
         description: 'Output location for the generated docker image'
-        default: none
-        options:
-          - package
-          - artifact
-          - none
+        default: 'none'
     outputs:
       id:
         description: "Id of the generated docker image"
