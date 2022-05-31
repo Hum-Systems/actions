@@ -85,7 +85,6 @@ jobs:
         run: |
           docker load -i /tmp/image.tar
           TAG=${{ (inputs.tag && steps.tag.outputs.lowercase) || format('ghcr.io/{0}', steps.meta.outputs.tags) }}
-          docker tag ${{ steps.meta.outputs.tags }} $TAG
           docker push $TAG
       - name: Fix cache
         run: |
