@@ -84,7 +84,6 @@ jobs:
         if: inputs.output-type == 'package'
         run: |
           docker load -i /tmp/image.tar
-          docker image ls
           TAG=${{ (inputs.tag && steps.tag.outputs.lowercase) || format('ghcr.io/{0}', steps.meta.outputs.tags) }}
           docker tag ${{ steps.meta.outputs.tags }} $TAG
           docker push $TAG
