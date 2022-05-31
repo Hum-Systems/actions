@@ -91,7 +91,7 @@ jobs:
             ]
           }'
         run: |
-          curl
+          curl \
             --location \
             --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}' \
             --header 'Content-Type: application/json' \
