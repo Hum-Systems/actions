@@ -13,7 +13,7 @@ name: Deploy
 
 jobs:
   deploy:
-    name: Deploy
+    name: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     steps:
       - name: Rollout
