@@ -20,79 +20,78 @@ jobs:
         run: |
           echo "kubectl rollout restart deployment/foo"
       - name: Send Google Chat Notification
-        env: 
-          message: '{
-            "cards": [
-              {
-                "header": {
-                  "title": "📦 Deployment",
-                  "subtitle": "${{ github.event.repository.name }} was deployed to ${{ inputs.environment }}"
-                },
-                "sections": [
-                  {
-                    "widgets": [
-                      {
-                        "keyValue": {
-                          "icon": "INVITE",
-                          "topLabel": "Status",
-                          "content": "${{ job.status }}"
-                        }
-                      },
-                      {
-                        "keyValue": {
-                          "icon": "BOOKMARK",
-                          "topLabel": "Tag",
-                          "content": "-"
-                        }
-                      },
-                      {
-                        "keyValue": {
-                          "icon": "DESCRIPTION",
-                          "topLabel": "Commit",
-                          "content": "${{ github.event.head_commit.message }}",
-                          "bottomLabel": "${{ github.event.head_commit.id }}",
-                          "onClick": {
-                            "openLink": {
-                              "url": "${{ github.event.head_commit.url }}"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "keyValue": {
-                          "iconUrl": "${{ github.event.sender.avatar_url }}",
-                          "topLabel": "Author",
-                          "content": "${{ github.event.sender.login }}",
-                          "onClick": {
-                            "openLink": {
-                              "url": "${{ github.event.sender.html_url }}"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "buttons": [
-                          {
-                            "textButton": {
-                              "text": "VIEW",
-                              "onClick": {
-                                "openLink": {
-                                  "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}}"
-                                }
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }'
         run: |
           curl \
             --location \
             --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}' \
             --header 'Content-Type: application/json' \
-            --data-raw $message
+            --data-raw '{
+              "cards": [
+                {
+                  "header": {
+                    "title": "📦 Deployment",
+                    "subtitle": "${{ github.event.repository.name }} was deployed to ${{ inputs.environment }}"
+                  },
+                  "sections": [
+                    {
+                      "widgets": [
+                        {
+                          "keyValue": {
+                            "icon": "INVITE",
+                            "topLabel": "Status",
+                            "content": "${{ job.status }}"
+                          }
+                        },
+                        {
+                          "keyValue": {
+                            "icon": "BOOKMARK",
+                            "topLabel": "Tag",
+                            "content": "-"
+                          }
+                        },
+                        {
+                          "keyValue": {
+                            "icon": "DESCRIPTION",
+                            "topLabel": "Commit",
+                            "content": "${{ github.event.head_commit.message }}",
+                            "bottomLabel": "${{ github.event.head_commit.id }}",
+                            "onClick": {
+                              "openLink": {
+                                "url": "${{ github.event.head_commit.url }}"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "keyValue": {
+                            "iconUrl": "${{ github.event.sender.avatar_url }}",
+                            "topLabel": "Author",
+                            "content": "${{ github.event.sender.login }}",
+                            "onClick": {
+                              "openLink": {
+                                "url": "${{ github.event.sender.html_url }}"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "buttons": [
+                            {
+                              "textButton": {
+                                "text": "VIEW",
+                                "onClick": {
+                                  "openLink": {
+                                    "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}}"
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }'
+
