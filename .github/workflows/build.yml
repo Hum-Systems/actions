@@ -27,8 +27,8 @@ on:
 name: Build
 
 jobs:
-  docker:
-    name: Docker Image
+  image:
+    name: Image
     runs-on: ubuntu-latest
     outputs:
       image: ${{ steps.return.outputs.image }}
