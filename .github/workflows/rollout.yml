@@ -95,4 +95,4 @@ jobs:
             --location \
             --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}' \
             --header 'Content-Type: application/json' \
-            --data-raw '${{ inputs.message }}'
+            --data-raw $message
