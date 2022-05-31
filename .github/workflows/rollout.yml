@@ -9,11 +9,11 @@ on:
         description: 'The target deployment environment'
         required: true
 
-name: Deploy
+name: Rollout
 
 jobs:
-  deploy:
-    name: ${{ inputs.environment }}
+  rollout:
+    name: Rollout
     runs-on: ubuntu-latest
     steps:
       - name: Rollout
