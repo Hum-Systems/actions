@@ -19,6 +19,16 @@ jobs:
       - name: Rollout
         run: |
           echo "kubectl rollout restart deployment/foo"
+      - name: Compute Tag
+        uses: ASzc/change-string-case-action@v1
+        id: tag
+        with:
+          string: ${{ format('ghcr.io/{0}:{1}', github.repository, inputs.environment) }}
+      - name: Compute Status
+        uses: ASzc/change-string-case-action@v1
+        id: status
+        with:
+          string: ${{ job.status }}
       - name: Send Google Chat Notification
         run: |
           curl \
@@ -39,14 +49,14 @@ jobs:
                           "keyValue": {
                             "icon": "INVITE",
                             "topLabel": "Status",
-                            "content": "${{ job.status }}"
+                            "content": "${{ steps.status.outputs.capitalize }}"
                           }
                         },
                         {
                           "keyValue": {
                             "icon": "BOOKMARK",
                             "topLabel": "Tag",
-                            "content": "-"
+                            "content": "${{ steps.tag.outputs.lowercase }}"
                           }
                         },
                         {
