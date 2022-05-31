@@ -1,0 +1,99 @@
+on:
+  workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+    inputs:
+      context:
+        type: string
+        description: 'Context for the docker build'
+        default: .
+      dockerfile:
+        type: string
+        description: 'Location of the dockerfile to use'
+        default: ./Dockerfile
+      tag:
+        type: string
+        description: 'Override the docker image tag'
+      output-type:
+        type: choice
+        description: 'Output location for the generated docker image'
+        default: none
+        options:
+          - package
+          - artifact
+          - none
+    outputs:
+      id:
+        description: "Id of the generated docker image"
+        value: ${{ jobs.docker.outputs.id }}
+      tag:
+        description: "Tag used of the generated docker image"
+        value: ${{ jobs.docker.outputs.tag }}
+
+name: Build
+
+jobs:
+  docker:
+    name: Docker Image
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.return.outputs.image }}
+      id: ${{ steps.return.outputs.id }}
+      tag: ${{ steps.return.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v1
+      - name: Cache Docker Layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Setup Container Registry
+        if: ${{ inputs.output-type == 'package' }}
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Infer Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,event=branch,enable=${{ startsWith(github.ref,'refs/heads/feature/') }},value={{branch}}
+            type=sha,event=branch,enable=${{ github.ref == 'refs/heads/main' }}
+      - name: Building Docker Image
+        id: build
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.dockerfile }}
+          tags: ${{ inputs.tag || steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          outputs: ${{ inputs.output-type == 'artifact' && 'type=docker,dest=/tmp/image.tar' }}
+          push: ${{ inputs.output-type == 'package' }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+      - name: Fix cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Saving Artifacts
+        if: ${{ inputs.output-type == 'artifact' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: image
+          path: /tmp/image.tar
+      - name: Returning Outputs
+        id: return
+        run: |
+          echo "::set-output name=id::${{ steps.build.outputs.imageid }}"
+          echo "::set-output name=tag::${{ steps.meta.outputs.tags }}"
