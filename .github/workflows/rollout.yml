@@ -1,12 +1,18 @@
 on:
   workflow_call:
     secrets:
+      KUBE_CONFIG:
+        required: true
       GOOGLE_CHAT_WEBHOOK:
         required: true
     inputs:
       environment:
         type: string
         description: 'The target deployment environment'
+        required: true
+      deployment_name:
+        type: string
+        description: 'The name of the Kubernetes deployment to rollout-restart'
         required: true
 
 name: Rollout
@@ -17,8 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Rollout
-        run: |
-          echo "kubectl rollout restart deployment/foo"
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: rollout restart deployment/${{ inputs.deployment_name }}
       - name: Compute Tag
         uses: ASzc/change-string-case-action@v1
         id: tag
@@ -104,4 +113,3 @@ jobs:
                 }
               ]
             }'
-
