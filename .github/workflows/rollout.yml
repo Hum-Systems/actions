@@ -13,7 +13,7 @@ on:
       deployment_name:
         type: string
         description: 'The name of the Kubernetes deployment to rollout-restart'
-        required: true
+        required: false
         default: ${{ github.event.repository.name }}
 
 name: Rollout
