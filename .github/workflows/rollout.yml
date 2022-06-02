@@ -23,12 +23,12 @@ jobs:
     name: Rollout
     runs-on: ubuntu-latest
     steps:
-      - name: Rollout
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      - name: Setup Kubectl
+        uses: tale/kubectl-action@v1
         with:
-          args: rollout restart deployment/${{ inputs.deployment_name }}
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+      - name: Rollout
+        runs: kubectl rollout restart deployment/${{ inputs.deployment_name }}
       - name: Compute Tag
         uses: ASzc/change-string-case-action@v1
         id: tag
