@@ -43,6 +43,10 @@ jobs:
         with:
           submodules: true
           ssh-key: ${{ secrets.CHECKOUT_SSH_KEY }}
+      - name: Initialize Submodules
+        run: |
+          git submodule init
+          git submodule update
       - name: Setup Docker
         uses: docker/setup-buildx-action@v1
       - name: Cache Docker Layers
