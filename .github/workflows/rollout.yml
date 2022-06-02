@@ -28,7 +28,7 @@ jobs:
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
       - name: Rollout
-        runs: kubectl rollout restart deployment/${{ inputs.deployment_name }}
+        run: kubectl rollout restart deployment/${{ inputs.deployment_name }}
       - name: Compute Tag
         uses: ASzc/change-string-case-action@v1
         id: tag
