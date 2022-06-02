@@ -1,6 +1,9 @@
 on:
   workflow_call:
     inputs:
+      ssh-key:
+        type: string
+        description: 'A ssh key to checkout private repos if needed'
       context:
         type: string
         description: 'Context for the docker build'
@@ -39,6 +42,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
+          ssh-key: ${{ inputs.ssh-key }}
       - name: Setup Docker
         uses: docker/setup-buildx-action@v1
       - name: Cache Docker Layers
