@@ -1,5 +1,9 @@
 on:
   workflow_call:
+    secrets:
+      SERVICE_ACCOUNT_TOKEN:
+        description: 'Service account access token to checkout private repositories'
+        required: true
 
 name: Tests
 
@@ -12,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-          ssh-key: ${{ secrets.CHECKOUT_SSH_KEY }}
+          token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -31,7 +35,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-          ssh-key: ${{ secrets.CHECKOUT_SSH_KEY }}
+          token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -51,7 +55,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-          ssh-key: ${{ secrets.CHECKOUT_SSH_KEY }}
+          token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
       - name: Install Clippy
         run: rustup component add clippy
       - name: Use Cache
