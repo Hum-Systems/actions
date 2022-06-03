@@ -87,7 +87,8 @@ jobs:
         if: inputs.output-type == 'package'
         run: |
           docker load -i /tmp/image.tar
-          for tag in "${{ steps.meta.outputs.tags }}"; do
+          TAGS=(`echo "${{ steps.meta.outputs.tags }}" | tr -d '\n'`)
+          for tag in $TAGS; do
             docker push $tag
           done
       - name: Fix cache
