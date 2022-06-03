@@ -71,7 +71,7 @@ jobs:
             type=raw,event=branch,enable=${{ startsWith(github.ref,'refs/heads/feature/') }},value={{branch}}
             type=sha,event=branch,enable={{is_default_branch}},prefix=
             type=raw,event=branch,enable={{is_default_branch}},value=latest
-            type=raw,enable=${{ inputs.tag }},value=${{ inputs.tag }}
+            type=raw,enable=${{ inputs.tag != '' }},value=${{ inputs.tag }}
       - name: Building Docker Image
         id: build
         uses: docker/build-push-action@v2
