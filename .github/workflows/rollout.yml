@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Rollout
-        uses: steebchen/kubectl@v2.0.
+        uses: steebchen/kubectl@v2.0.0
         with:
           config: ${{ secrets.KUBE_CONFIG }}
           command: rollout restart deployment/${{ inputs.deployment_name }}
