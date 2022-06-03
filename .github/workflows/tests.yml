@@ -9,14 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          submodules: true
+          submodules: recursive
           ssh-key: ${{ secrets.CHECKOUT_SSH_KEY }}
-      - name: Initialize Submodules
-        run: |
-          git submodule init
-          git submodule update
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -32,14 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          submodules: true
+          submodules: recursive
           ssh-key: ${{ secrets.CHECKOUT_SSH_KEY }}
-      - name: Initialize Submodules
-        run: |
-          git submodule init
-          git submodule update
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -56,14 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          submodules: true
+          submodules: recursive
           ssh-key: ${{ secrets.CHECKOUT_SSH_KEY }}
-      - name: Initialize Submodules
-        run: |
-          git submodule init
-          git submodule update
       - name: Install Clippy
         run: rustup component add clippy
       - name: Use Cache
