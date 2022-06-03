@@ -58,7 +58,7 @@ jobs:
                           "keyValue": {
                             "icon": "INVITE",
                             "topLabel": "Status",
-                            "content": "${{ steps.status.outputs.capitalize }}"
+                            "content": "${{ steps.status.outputs.capitalized }}"
                           }
                         },
                         {
