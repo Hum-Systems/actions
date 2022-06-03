@@ -64,25 +64,21 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ github.repository }}
+          images: ghcr.io/${{ github.repository }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=raw,event=branch,enable=${{ startsWith(github.ref,'refs/heads/feature/') }},value={{branch}}
-            type=sha,event=branch,enable=${{ github.ref == 'refs/heads/main' }}
-      - name: Setting Image Tag
-        uses: ASzc/change-string-case-action@v1
-        if: inputs.tag
-        id: tag
-        with:
-          string: ${{ format('ghcr.io/{0}:{1}', github.repository, inputs.tag) }}
+            type=sha,event=branch,enable={{is_default_branch}},prefix=
+            type=raw,event=branch,enable={{is_default_branch}},value=latest
+            type=raw,enable=${{ inputs.tag }},value=${{ inputs.tag }}
       - name: Building Docker Image
         id: build
         uses: docker/build-push-action@v2
         with:
           context: ${{ inputs.context }}
           file: ${{ inputs.dockerfile }}
-          tags: ${{ (inputs.tag && steps.tag.outputs.lowercase) || steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=docker,dest=/tmp/image.tar
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -91,9 +87,9 @@ jobs:
         if: inputs.output-type == 'package'
         run: |
           docker load -i /tmp/image.tar
-          TAG=${{ (inputs.tag && steps.tag.outputs.lowercase) || format('ghcr.io/{0}', steps.meta.outputs.tags) }}
-          docker tag ${{ (inputs.tag && steps.tag.outputs.lowercase ) || steps.meta.outputs.tags }} $TAG
-          docker push $TAG
+          for tag in ${{ steps.meta.outputs.tags }}; do
+            docker push $tag
+          done
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
