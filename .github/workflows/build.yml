@@ -87,12 +87,7 @@ jobs:
         if: inputs.output-type == 'package'
         run: |
           docker load -i /tmp/image.tar
-          docker images
-          echo "${{ steps.meta.outputs.tags }}"
-          TAGS=(`echo "${{ steps.meta.outputs.tags }}" | tr -d '\n'`)
-          for tag in $TAGS; do
-            docker push $tag
-          done
+          docker push --all-tags ghcr.io/${GITHUB_REPOSITORY,,}
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
