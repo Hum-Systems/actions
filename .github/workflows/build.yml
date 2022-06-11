@@ -87,6 +87,8 @@ jobs:
         if: inputs.output-type == 'package'
         run: |
           docker load -i /tmp/image.tar
+          docker images
+          echo "${{ steps.meta.outputs.tags }}"
           TAGS=(`echo "${{ steps.meta.outputs.tags }}" | tr -d '\n'`)
           for tag in $TAGS; do
             docker push $tag
