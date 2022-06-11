@@ -38,6 +38,11 @@ jobs:
         id: status
         with:
           string: ${{ job.status }}
+      - name: Compute Environment
+        uses: ASzc/change-string-case-action@v1
+        id: env
+        with:
+          string: ${{ inputs.environment }}
       - name: Send Google Chat Notification
         run: |
           curl \
@@ -48,7 +53,7 @@ jobs:
               "cards": [
                 {
                   "header": {
-                    "title": "📦 Deployment",
+                    "title": "⚙️ ${{ steps.env.outputs.capitalized }} Deployment",
                     "subtitle": "${{ github.event.repository.name }} was deployed to ${{ inputs.environment }}"
                   },
                   "sections": [
