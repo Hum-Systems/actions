@@ -53,7 +53,7 @@ jobs:
               "cards": [
                 {
                   "header": {
-                    "title": "⚙️ ${{ steps.env.outputs.capitalized }} Deployment",
+                    "title": "📢 ${{ steps.env.outputs.capitalized }} Deployment",
                     "subtitle": "${{ github.event.repository.name }} was deployed to ${{ inputs.environment }}"
                   },
                   "sections": [
