@@ -6,6 +6,9 @@ on:
       GOOGLE_CHAT_WEBHOOK:
         required: true
     inputs:
+      tag:
+        type: string
+        description: 'The tag that was deployed if its not equal to environment'
       environment:
         type: string
         description: 'The target deployment environment'
@@ -32,7 +35,7 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         id: tag
         with:
-          string: ${{ format('ghcr.io/{0}:{1}', github.repository, inputs.environment) }}
+          string: ${{ format('ghcr.io/{0}:{1}', github.repository, (inputs.tag || inputs.environment) }}
       - name: Compute Status
         uses: ASzc/change-string-case-action@v1
         id: status
