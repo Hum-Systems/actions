@@ -40,7 +40,7 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         id: tag
         with:
-          string: ${{ format('ghcr.io/{0}:{1}', image-name, (inputs.tag || inputs.environment)) }}
+          string: ${{ format('ghcr.io/{0}:{1}', inputs.image-name, (inputs.tag || inputs.environment)) }}
       - name: Compute Status
         uses: ASzc/change-string-case-action@v1
         id: status
