@@ -25,7 +25,7 @@ on:
         default: 'none'
       image-name:
         type: string
-        description: 'Name of the genereated docker image'
+        description: 'The name of the genereated docker image'
         required: false
         default: ${{ github.repository }}
     outputs:
