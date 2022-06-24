@@ -95,7 +95,8 @@ jobs:
         if: inputs.output-type == 'package' && steps.meta.outputs.tags != ''
         run: |
           docker load -i /tmp/image.tar
-          docker push --all-tags ghcr.io/${GITHUB_REPOSITORY,,}
+          name = "${{ inputs.image-name }}"
+          docker push --all-tags ghcr.io/${ name,, }
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
