@@ -30,6 +30,8 @@ jobs:
         uses: Swatinem/rust-cache@v1
       - name: Run Tests
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
       - run: cd ${{ inputs.context }} && cargo test
   formatting:
     name: Formatting
@@ -48,6 +50,8 @@ jobs:
         uses: Swatinem/rust-cache@v1
       - name: Check Formatting
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
       - run: cd ${{ inputs.context }} && cargo fmt --all -- --check
   clippy:
     name: Clippy
