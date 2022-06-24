@@ -68,10 +68,11 @@ jobs:
         uses: Swatinem/rust-cache@v1
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
-      - name: Change directory
-        run: cd ${{ inputs.context }}
       - name: Run Clippy
-        uses: actions-rs/clippy-check@v1
+        # switch to actions-rs/clippy-check@v1 once this gets merged:
+        # https://github.com/actions-rs/clippy-check/pull/158
+        uses: reinismu/clippy-check@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: ${{ inputs.context }}
           name: Clippy Results
