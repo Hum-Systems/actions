@@ -8,10 +8,12 @@ on:
       context:
         type: string
         description: 'Context for the docker build'
+        required: false
         default: .
       dockerfile:
         type: string
         description: 'Location of the dockerfile to use'
+        required: false
         default: ./Dockerfile
       tag:
         type: string
@@ -19,7 +21,13 @@ on:
       output-type:
         type: string
         description: 'Output location for the generated docker image'
+        required: false
         default: 'none'
+      image-name:
+        type: string
+        description: 'The name of the genereated docker image'
+        required: false
+        default: ${{ github.repository }}
     outputs:
       id:
         description: "Id of the generated docker image"
@@ -62,7 +70,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/${{ inputs.image-name }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
