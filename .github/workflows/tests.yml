@@ -66,11 +66,12 @@ jobs:
         run: rustup component add clippy
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
+      - name: Use Cache
+        uses: Swatinem/rust-cache@v1
+      - name: Change directory
+        run: cd ${{ inputs.context }}
       - name: Run Clippy
-        # switch to actions-rs/clippy-check@v1 once this gets merged:
-        # https://github.com/actions-rs/clippy-check/pull/158
-        uses: reinismu/clippy-check@master
+        uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          working-directory: ${{ inputs.context }}
           name: Clippy Results
