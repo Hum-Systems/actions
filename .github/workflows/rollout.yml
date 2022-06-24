@@ -18,6 +18,11 @@ on:
         description: 'The name of the Kubernetes deployment to rollout-restart'
         required: false
         default: ${{ github.event.repository.name }}
+      image-name:
+        type: string
+        description: 'The name of the genereated docker image'
+        required: false
+        default: ${{ github.repository }}
 
 name: Rollout
 
@@ -35,7 +40,7 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         id: tag
         with:
-          string: ${{ format('ghcr.io/{0}:{1}', github.repository, (inputs.tag || inputs.environment)) }}
+          string: ${{ format('ghcr.io/{0}:{1}', inputs.image-name, (inputs.tag || inputs.environment)) }}
       - name: Compute Status
         uses: ASzc/change-string-case-action@v1
         id: status
