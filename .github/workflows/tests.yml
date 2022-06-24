@@ -4,6 +4,11 @@ on:
       SERVICE_ACCOUNT_TOKEN:
         description: 'Service account access token to checkout private repositories'
         required: true
+    inputs:
+      context:
+        type: string
+        description: 'Context for the tests'
+        default: .
 
 name: Tests
 
@@ -24,9 +29,8 @@ jobs:
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
       - name: Run Tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
+        uses: actions-rs/toolchain@v1
+      - run: cd ${{ inputs.context }} && cargo test
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
@@ -43,10 +47,8 @@ jobs:
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
       - name: Check Formatting
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        uses: actions-rs/toolchain@v1
+      - run: cd ${{ inputs.context }} && cargo fmt --all -- --check
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
