@@ -91,12 +91,16 @@ jobs:
           outputs: type=docker,dest=/tmp/image.tar
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+      - name: Compute Image Name
+        uses: ASzc/change-string-case-action@v1
+        id: image-name
+        with:
+          string: ${{ inputs.image-name }}
       - name: Push Image
         if: inputs.output-type == 'package' && steps.meta.outputs.tags != ''
         run: |
           docker load -i /tmp/image.tar
-          IMAGE_NAME = "${{ inputs.image-name }}"
-          docker push --all-tags ghcr.io/${IMAGE_NAME,, }
+          docker push --all-tags ghcr.io/${{ steps.image-name.outputs.lowercase }}
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
