@@ -96,7 +96,7 @@ jobs:
         run: |
           docker load -i /tmp/image.tar
           IMAGE_NAME = "${{ inputs.image-name }}"
-          docker push --all-tags ghcr.io/${ $IMAGE_NAME,, }
+          docker push --all-tags ghcr.io/${IMAGE_NAME,, }
       - name: Fix cache
         run: |
           rm -rf /tmp/.buildx-cache
