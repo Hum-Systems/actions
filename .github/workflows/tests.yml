@@ -4,6 +4,11 @@ on:
       SERVICE_ACCOUNT_TOKEN:
         description: 'Service account access token to checkout private repositories'
         required: true
+    inputs:
+      context:
+        type: string
+        description: 'Context for the tests'
+        default: .
 
 name: Tests
 
@@ -24,9 +29,10 @@ jobs:
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
       - name: Run Tests
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/toolchain@v1
         with:
-          command: test
+          toolchain: stable
+      - run: cd ${{ inputs.context }} && cargo test
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
@@ -43,10 +49,10 @@ jobs:
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
       - name: Check Formatting
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/toolchain@v1
         with:
-          command: fmt
-          args: --all -- --check
+          toolchain: stable
+      - run: cd ${{ inputs.context }} && cargo fmt --all -- --check
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
@@ -60,8 +66,13 @@ jobs:
         run: rustup component add clippy
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
+      - name: Use Cache
+        uses: Swatinem/rust-cache@v1
       - name: Run Clippy
-        uses: actions-rs/clippy-check@v1
+        # switch to actions-rs/clippy-check@v1 once this gets merged:
+        # https://github.com/actions-rs/clippy-check/pull/158
+        uses: reinismu/clippy-check@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: ${{ inputs.context }}
           name: Clippy Results
