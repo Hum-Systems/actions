@@ -84,12 +84,12 @@ jobs:
                         {
                           "keyValue": {
                             "icon": "DESCRIPTION",
-                            "topLabel": "${{ (github.event.head_commit && 'Commit') || (github.event.release || 'Release') }}",
+                            "topLabel": "${{ (github.event.head_commit && 'Commit') || (github.event.release && 'Release') }}",
                             "content": "${{ github.event.head_commit.message || github.event.release.name }}",
-                            "bottomLabel": "${{ github.event.head_commit.id || github.event.release.tag_name }}",
+                            "bottomLabel": "${{ github.event.head_commit.id }}",
                             "onClick": {
                               "openLink": {
-                                "url": "${{ github.event.head_commit.url || github.event.release.url }}"
+                                "url": "${{ github.event.head_commit.url || github.event.release.html_url }}"
                               }
                             }
                           }
