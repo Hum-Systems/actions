@@ -9,6 +9,10 @@ on:
         type: string
         description: 'Context for the tests'
         default: .
+      integration:
+        type: boolean
+        description: 'Run integration tests'
+        default: false
 
 name: Tests
 
@@ -32,7 +36,28 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: cd ${{ inputs.context }} && cargo test
+      - run: cd ${{ inputs.context }} && cargo test --lib
+  integration:
+    if: ${{ inputs.integration }}
+    name: Integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Use Cache
+        uses: Swatinem/rust-cache@v1
+      - name: Run Tests
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: cd ${{ inputs.context }} && cargo test --test integration
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
