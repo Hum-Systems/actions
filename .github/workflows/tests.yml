@@ -5,7 +5,6 @@ on:
         description: 'Service account access token to checkout private repositories'
         required: true
       ENV:
-        type: string
         description: 'Test env vars'
         default: ''
     inputs:
