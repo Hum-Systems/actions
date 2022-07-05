@@ -4,6 +4,10 @@ on:
       SERVICE_ACCOUNT_TOKEN:
         description: 'Service account access token to checkout private repositories'
         required: true
+      ENV:
+        type: string
+        description: 'Test env vars'
+        default: ''
     inputs:
       context:
         type: string
@@ -13,10 +17,6 @@ on:
         type: boolean
         description: 'Run integration tests'
         default: false
-      env:
-        type: string
-        description: 'Test env vars'
-        default: ''
 
 name: Tests
 
@@ -36,14 +36,11 @@ jobs:
           toolchain: stable
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
-      - name: Add env mask
-        run: |
-          echo "::add-mask::${{ inputs.env }}" 
       - name: Run Tests
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: ${{ inputs.env }} cd ${{ inputs.context }} && cargo test --lib
+      - run: ${{ secrets.ENV }} cd ${{ inputs.context }} && cargo test --lib
   integration:
     if: ${{ inputs.integration }}
     name: Integration
@@ -60,14 +57,11 @@ jobs:
           toolchain: stable
       - name: Use Cache
         uses: Swatinem/rust-cache@v1
-      - name: Add env mask
-        run: |
-          echo "::add-mask::${{ inputs.env }}" 
       - name: Run Tests
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: ${{ inputs.env }} cd ${{ inputs.context }} && cargo test --test integration
+      - run: ${{ secrets.ENV }} cd ${{ inputs.context }} && cargo test --test integration
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
