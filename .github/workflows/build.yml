@@ -15,6 +15,10 @@ on:
         description: 'Location of the dockerfile to use'
         required: false
         default: ./Dockerfile
+      build-args:
+        type: string
+        description: 'Build args to pass to docker'
+        required: false
       tag:
         type: string
         description: 'Override the docker image tag'
@@ -91,6 +95,7 @@ jobs:
           outputs: type=docker,dest=/tmp/image.tar
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          build-args: ${{ inputs.build-args }}
       - name: Compute Image Name
         uses: ASzc/change-string-case-action@v1
         id: image-name
